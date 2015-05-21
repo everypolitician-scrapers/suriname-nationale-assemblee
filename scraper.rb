@@ -7,11 +7,11 @@ require 'date'
 require 'open-uri'
 require 'date'
 
-require 'colorize'
-require 'pry'
-require 'csv'
-require 'open-uri/cached'
-OpenURI::Cache.cache_path = '.cache'
+# require 'colorize'
+# require 'pry'
+# require 'csv'
+# require 'open-uri/cached'
+# OpenURI::Cache.cache_path = '.cache'
 
 def noko(url)
   Nokogiri::HTML(open(url).read, nil, 'utf-8') 
@@ -57,7 +57,7 @@ page.css('div#maincolumn ul li').each do |mp|
   image.prepend @BASE unless @image.nil? or @image.empty?
   puts data
   added += 1
-  # ScraperWiki.save_sqlite([:name, :term], data)
+  ScraperWiki.save_sqlite([:name, :term], data)
 end
 puts "  Added #{added} members"
 
