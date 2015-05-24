@@ -54,8 +54,8 @@ page.css('div#maincolumn ul li').each do |mp|
     homepage: mp_url,
     source: @URL,
   }
-  image.prepend @BASE unless @image.nil? or @image.empty?
-  puts data
+  data[:image].prepend @BASE unless data[:image].nil? or data[:image].empty?
+  puts data.values.to_csv
   added += 1
   ScraperWiki.save_sqlite([:name, :term], data)
 end
