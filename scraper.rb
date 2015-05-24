@@ -6,10 +6,10 @@ require 'nokogiri'
 require 'date'
 require 'open-uri'
 require 'date'
+require 'csv'
 
 # require 'colorize'
 # require 'pry'
-# require 'csv'
 # require 'open-uri/cached'
 # OpenURI::Cache.cache_path = '.cache'
 
