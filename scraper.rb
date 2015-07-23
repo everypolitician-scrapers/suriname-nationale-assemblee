@@ -21,12 +21,17 @@ def datefrom(date)
   Date.parse(date)
 end
 
+def gender_from(str)
+  return 'male' if str.start_with? 'Hr.'
+  return 'female' if str.start_with? 'Mw.'
+  raise "Unknown gender #{str}"
+end
+
 class String
   def trim
     self.gsub(/[[:space:]]/,' ').strip
   end
 end
-    
 
 @BASE = 'http://www.dna.sr'
 @URL = @BASE + '/het-politiek-college/leden/'
@@ -41,19 +46,20 @@ page.css('div#maincolumn ul li').each do |mp|
 
   data = { 
     id: mp_url.split('/').last,
-    name: mp.css('h3').text.split('|').first.gsub(/[[:space:]]/,' ').strip,
+    name: mp.css('h3').text.split('|').first.trim,
     image: mp.css('img/@src').first.text,
     party: party,
     party_id: party_id,
     faction: faction,
     faction_id: faction_id,
-    district: mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Kiesdistrict")]]/following-sibling::td').text.gsub(/[[:space:]]/,' ').strip,
-    phone: mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Telefoon")]]/following-sibling::td').text.gsub(/[[:space:]]/,' ').strip,
+    district: mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Kiesdistrict")]]/following-sibling::td').text.trim,
+    phone: mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Telefoon")]]/following-sibling::td').text.trim,
     email: mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Email")]]/following-sibling::td').text.split('/').first.strip,
     term: 2010,
     homepage: mp_url,
     source: @URL,
   }
+  data[:gender] = gender_from(data[:name])
   data[:image].prepend @BASE unless data[:image].nil? or data[:image].empty?
   puts data.values.to_csv
   added += 1
