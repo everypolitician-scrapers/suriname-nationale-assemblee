@@ -55,7 +55,7 @@ page.css('div#maincolumn ul li').each do |mp|
     district: mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Kiesdistrict")]]/following-sibling::td').text.to_s.trim,
     phone: mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Telefoon")]]/following-sibling::td').text.to_s.trim,
     email: mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Email")]]/following-sibling::td').text.split('/').first.to_s.strip,
-    term: 2010,
+    term: 2015,
     homepage: mp_url,
     source: @URL,
   }
