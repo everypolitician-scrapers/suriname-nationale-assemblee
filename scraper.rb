@@ -61,7 +61,6 @@ page.css('div#maincolumn ul li').each do |mp|
   }
   data[:gender] = gender_from(data[:name])
   data[:image].prepend @BASE unless data[:image].nil? or data[:image].empty?
-  puts data.values.to_csv
   added += 1
   ScraperWiki.save_sqlite([:name, :term], data)
 end
