@@ -8,10 +8,10 @@ require 'open-uri'
 require 'date'
 require 'csv'
 
-# require 'colorize'
-# require 'pry'
-# require 'open-uri/cached'
-# OpenURI::Cache.cache_path = '.cache'
+require 'colorize'
+require 'pry'
+require 'open-uri/cached'
+OpenURI::Cache.cache_path = '.cache'
 
 def noko(url)
   Nokogiri::HTML(open(url).read, nil, 'utf-8') 
@@ -24,7 +24,8 @@ end
 def gender_from(str)
   return 'male' if str.start_with? 'Hr.'
   return 'female' if str.start_with? 'Mw.'
-  raise "Unknown gender #{str}"
+  warn "Unknown gender for #{str}"
+  return
 end
 
 class String
@@ -59,7 +60,7 @@ page.css('div#maincolumn ul li').each do |mp|
     homepage: mp_url,
     source: @URL,
   }
-  data[:gender] = gender_from(data[:name])
+  data[:gender] = gender_from(data[:name]) 
   data[:image].prepend @BASE unless data[:image].nil? or data[:image].empty?
   added += 1
   ScraperWiki.save_sqlite([:name, :term], data)
