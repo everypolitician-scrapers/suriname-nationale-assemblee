@@ -1,5 +1,6 @@
 #!/bin/env ruby
 # encoding: utf-8
+# frozen_string_literal: true
 
 require 'scraperwiki'
 require 'nokogiri'
@@ -11,7 +12,7 @@ require 'open-uri/cached'
 OpenURI::Cache.cache_path = '.cache'
 
 def noko(url)
-  Nokogiri::HTML(open(url).read, nil, 'utf-8') 
+  Nokogiri::HTML(open(url).read, nil, 'utf-8')
 end
 
 def datefrom(date)
@@ -22,12 +23,12 @@ def gender_from(str)
   return 'male' if str.start_with? 'Hr.'
   return 'female' if str.start_with? 'Mw.'
   warn "Unknown gender for #{str}"
-  return
+  nil
 end
 
 class String
   def trim
-    self.gsub(/[[:space:]]/,' ').strip
+    gsub(/[[:space:]]/, ' ').strip
   end
 end
 
@@ -42,26 +43,24 @@ page.css('div#maincolumn ul li').each do |mp|
   (faction, faction_id) = mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Fractie")]]/following-sibling::td').text.trim.match(/(.*?)\s+\((.*?)\)/).captures
   (party, party_id) = mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Partij")]]/following-sibling::td/a/@title').text.trim.match(/(.*?)\s+\((.*?)\)/).captures
 
-  data = { 
-    id: mp_url.split('/').last,
-    name: mp.css('h3').text.split('|').first.trim,
-    image: mp.css('img/@src').first.text,
-    party: party,
-    party_id: party_id,
-    faction: faction,
+  data = {
+    id:         mp_url.split('/').last,
+    name:       mp.css('h3').text.split('|').first.trim,
+    image:      mp.css('img/@src').first.text,
+    party:      party,
+    party_id:   party_id,
+    faction:    faction,
     faction_id: faction_id,
-    district: mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Kiesdistrict")]]/following-sibling::td').text.to_s.trim,
-    phone: mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Telefoon")]]/following-sibling::td').text.to_s.trim,
-    email: mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Email")]]/following-sibling::td').text.split('/').first.to_s.strip,
-    term: 2015,
-    homepage: mp_url,
-    source: @URL,
+    district:   mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Kiesdistrict")]]/following-sibling::td').text.to_s.trim,
+    phone:      mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Telefoon")]]/following-sibling::td').text.to_s.trim,
+    email:      mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Email")]]/following-sibling::td').text.split('/').first.to_s.strip,
+    term:       2015,
+    homepage:   mp_url,
+    source:     @URL,
   }
-  data[:gender] = gender_from(data[:name]) 
-  data[:image].prepend @BASE unless data[:image].nil? or data[:image].empty?
+  data[:gender] = gender_from(data[:name])
+  data[:image].prepend @BASE unless data[:image].nil? || data[:image].empty?
   added += 1
-  ScraperWiki.save_sqlite([:name, :term], data)
+  ScraperWiki.save_sqlite(%i(name term), data)
 end
 puts "  Added #{added} members"
-
-
