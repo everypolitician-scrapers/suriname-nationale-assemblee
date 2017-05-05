@@ -29,7 +29,6 @@ end
 @URL = @BASE + '/het-politiek-college/leden/'
 
 page = noko(@URL)
-added = 0
 
 page.css('div#maincolumn ul li').each do |mp|
   mp_url = mp.css('h3 a/@href').text
@@ -53,7 +52,6 @@ page.css('div#maincolumn ul li').each do |mp|
   }
   data[:gender] = gender_from(data[:name])
   data[:image].prepend @BASE unless data[:image].nil? || data[:image].empty?
-  added += 1
+  puts data.reject { |_, v| v.to_s.empty? }.sort_by { |k, _| k }.to_h if ENV['MORPH_DEBUG']
   ScraperWiki.save_sqlite(%i[name term], data)
 end
-puts "  Added #{added} members"
