@@ -25,10 +25,8 @@ def gender_from(str)
   nil
 end
 
-@BASE = 'http://www.dna.sr'
-@URL = @BASE + '/het-politiek-college/leden/'
-
-page = noko(@URL)
+url = 'http://www.dna.sr/het-politiek-college/leden/'
+page = noko(url)
 
 page.css('div#maincolumn ul li').each do |mp|
   mp_url = mp.css('h3 a/@href').text
@@ -48,10 +46,10 @@ page.css('div#maincolumn ul li').each do |mp|
     email:      mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Email")]]/following-sibling::td').text.split('/').first.to_s.strip,
     term:       2015,
     homepage:   mp_url,
-    source:     @URL,
+    source:     url,
   }
   data[:gender] = gender_from(data[:name])
-  data[:image].prepend @BASE unless data[:image].nil? || data[:image].empty?
+  data[:image] = URI.join(url, data[:image]).to_s unless data[:image].to_s.empty?
   puts data.reject { |_, v| v.to_s.empty? }.sort_by { |k, _| k }.to_h if ENV['MORPH_DEBUG']
   ScraperWiki.save_sqlite(%i[name term], data)
 end
