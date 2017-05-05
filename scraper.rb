@@ -2,10 +2,9 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-require 'scraperwiki'
-require 'nokogiri'
-require 'date'
 require 'pry'
+require 'scraped'
+require 'scraperwiki'
 
 # require 'open-uri/cached'
 # OpenURI::Cache.cache_path = '.cache'
@@ -26,12 +25,6 @@ def gender_from(str)
   nil
 end
 
-class String
-  def trim
-    gsub(/[[:space:]]/, ' ').strip
-  end
-end
-
 @BASE = 'http://www.dna.sr'
 @URL = @BASE + '/het-politiek-college/leden/'
 
@@ -40,19 +33,19 @@ added = 0
 
 page.css('div#maincolumn ul li').each do |mp|
   mp_url = mp.css('h3 a/@href').text
-  (faction, faction_id) = mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Fractie")]]/following-sibling::td').text.trim.match(/(.*?)\s+\((.*?)\)/).captures
-  (party, party_id) = mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Partij")]]/following-sibling::td/a/@title').text.trim.match(/(.*?)\s+\((.*?)\)/).captures
+  (faction, faction_id) = mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Fractie")]]/following-sibling::td').text.tidy.match(/(.*?)\s+\((.*?)\)/).captures
+  (party, party_id) = mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Partij")]]/following-sibling::td/a/@title').text.tidy.match(/(.*?)\s+\((.*?)\)/).captures
 
   data = {
     id:         mp_url.split('/').last,
-    name:       mp.css('h3').text.split('|').first.trim,
+    name:       mp.css('h3').text.split('|').first.tidy,
     image:      mp.css('img/@src').first.text,
     party:      party,
     party_id:   party_id,
     faction:    faction,
     faction_id: faction_id,
-    district:   mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Kiesdistrict")]]/following-sibling::td').text.to_s.trim,
-    phone:      mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Telefoon")]]/following-sibling::td').text.to_s.trim,
+    district:   mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Kiesdistrict")]]/following-sibling::td').text.to_s.tidy,
+    phone:      mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Telefoon")]]/following-sibling::td').text.to_s.tidy,
     email:      mp.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Email")]]/following-sibling::td').text.split('/').first.to_s.strip,
     term:       2015,
     homepage:   mp_url,
