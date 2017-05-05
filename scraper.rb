@@ -61,6 +61,6 @@ page.css('div#maincolumn ul li').each do |mp|
   data[:gender] = gender_from(data[:name])
   data[:image].prepend @BASE unless data[:image].nil? || data[:image].empty?
   added += 1
-  ScraperWiki.save_sqlite(%i(name term), data)
+  ScraperWiki.save_sqlite(%i[name term], data)
 end
 puts "  Added #{added} members"
