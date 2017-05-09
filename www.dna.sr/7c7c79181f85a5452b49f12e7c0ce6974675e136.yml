@@ -18,7 +18,7 @@ response:
     message: OK
   headers:
     Date:
-    - Mon, 08 May 2017 03:34:14 GMT
+    - Tue, 09 May 2017 17:47:15 GMT
     Content-Type:
     - text/html; charset=utf-8
     Transfer-Encoding:
@@ -26,8 +26,8 @@ response:
     Connection:
     - keep-alive
     Set-Cookie:
-    - __cfduid=dc16060123281c570992b4dcb973d447e1494214453; expires=Tue, 08-May-18
-      03:34:13 GMT; path=/; domain=.dna.sr; HttpOnly
+    - __cfduid=db93b992942977045190d9583f844411b1494352034; expires=Wed, 09-May-18
+      17:47:14 GMT; path=/; domain=.dna.sr; HttpOnly
     Cache-Control:
     - private
     X-Aspnet-Version:
@@ -37,8 +37,8 @@ response:
     Server:
     - cloudflare-nginx
     Cf-Ray:
-    - 35b95cadf659519a-SJC
+    - 35c67b9710096e56-SJC
   body:
     encoding: ASCII-8BIT
   http_version: 
-recorded_at: Mon, 08 May 2017 03:34:14 GMT
+recorded_at: Tue, 09 May 2017 17:47:16 GMT
