@@ -10,6 +10,40 @@ require 'scraperwiki'
 # OpenURI::Cache.cache_path = '.cache'
 require 'scraped_page_archive/open-uri'
 
+class MemberName < Scraped::HTML
+  field :prefix do
+    partitioned.first.join(' ')
+  end
+
+  field :name do
+    partitioned.last.join(' ')
+  end
+
+  field :gender do
+    return 'male' if (prefixes & MALE_PREFIXES).any?
+    return 'female' if (prefixes & FEMALE_PREFIXES).any?
+  end
+
+  private
+
+  FEMALE_PREFIXES  = %w(mw).freeze
+  MALE_PREFIXES    = %w(hr).freeze
+  OTHER_PREFIXES   = %w(dr drs ir mr).freeze
+  PREFIXES         = FEMALE_PREFIXES + MALE_PREFIXES + OTHER_PREFIXES
+
+  def partitioned
+    words.partition { |w| PREFIXES.include? w.chomp('.').downcase }
+  end
+
+  def prefixes
+    partitioned.first.map { |w| w.chomp('.') }
+  end
+
+  def words
+    noko.text.split('|').first.tidy.split(/\s+/)
+  end
+end
+
 class MembersPage < Scraped::HTML
   decorator Scraped::Response::Decorator::CleanUrls
 
@@ -32,14 +66,15 @@ class MemberItem < Scraped::HTML
   end
 
   field :name do
-    noko.css('h3').text.split('|').first.tidy
+    name_parts.name
+  end
+
+  field :honorific_prefix do
+    name_parts.prefix
   end
 
   field :gender do
-    return 'male' if raw_name.start_with? 'Hr.'
-    return 'female' if raw_name.start_with? 'Mw.'
-    warn "Unknown gender for #{raw_name}"
-    nil
+    name_parts.gender
   end
 
   field :image do
@@ -84,8 +119,8 @@ class MemberItem < Scraped::HTML
 
   private
 
-  def raw_name
-    noko.css('h3').text.split('|').first.tidy
+  def name_parts
+    fragment(noko.css('h3') => MemberName)
   end
 
   def faction_data
