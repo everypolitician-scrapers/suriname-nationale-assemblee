@@ -106,7 +106,7 @@ class MemberItem < Scraped::HTML
   end
 
   field :email do
-    noko.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Email")]]/following-sibling::td').text.split('/').first.to_s.strip
+    noko.css('.__cf_email__/@data-cfemail').map { |n| parse_cfemail(n.text) }.join(';')
   end
 
   field :homepage do
@@ -129,6 +129,12 @@ class MemberItem < Scraped::HTML
 
   def party_data
     noko.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Partij")]]/following-sibling::td/a/@title').text.tidy.match(/(.*?)\s+\((.*?)\)/).captures
+  end
+
+  def parse_cfemail(str)
+    list = str.scan(/../).map { |str| str.to_i(16) }
+    key = list.shift
+    list.map { |i| (key ^ i).chr }.join
   end
 end
 
