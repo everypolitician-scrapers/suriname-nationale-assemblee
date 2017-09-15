@@ -36,7 +36,10 @@ class MemberItem < Scraped::HTML
   end
 
   field :gender do
-    gender_from(name)
+    return 'male' if raw_name.start_with? 'Hr.'
+    return 'female' if raw_name.start_with? 'Mw.'
+    warn "Unknown gender for #{raw_name}"
+    nil
   end
 
   field :image do
@@ -81,19 +84,16 @@ class MemberItem < Scraped::HTML
 
   private
 
+  def raw_name
+    noko.css('h3').text.split('|').first.tidy
+  end
+
   def faction_data
     noko.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Fractie")]]/following-sibling::td').text.tidy.match(/(.*?)\s+\((.*?)\)/).captures
   end
 
   def party_data
     noko.at_xpath('.//td[@class="tlabel" and text()[contains(.,"Partij")]]/following-sibling::td/a/@title').text.tidy.match(/(.*?)\s+\((.*?)\)/).captures
-  end
-
-  def gender_from(str)
-    return 'male' if str.start_with? 'Hr.'
-    return 'female' if str.start_with? 'Mw.'
-    warn "Unknown gender for #{str}"
-    nil
   end
 end
 
