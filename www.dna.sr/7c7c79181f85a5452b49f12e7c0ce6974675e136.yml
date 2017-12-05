@@ -14,31 +14,26 @@ request:
     - Ruby
 response:
   status:
-    code: 200
-    message: OK
+    code: 301
+    message: Moved Permanently
   headers:
     Date:
-    - Fri, 01 Dec 2017 22:28:46 GMT
-    Content-Type:
-    - text/html; charset=utf-8
+    - Tue, 05 Dec 2017 14:24:03 GMT
     Transfer-Encoding:
     - chunked
     Connection:
     - keep-alive
-    Set-Cookie:
-    - __cfduid=dec78a41f951ec305f810faee2ce0919f1512167325; expires=Sat, 01-Dec-18
-      22:28:45 GMT; path=/; domain=.dna.sr; HttpOnly
     Cache-Control:
-    - private
-    X-Aspnet-Version:
-    - 4.0.30319
-    X-Powered-By:
-    - ASP.NET
+    - max-age=3600
+    Expires:
+    - Tue, 05 Dec 2017 15:24:03 GMT
+    Location:
+    - http://dna.sr/het-politiek-college/leden/
     Server:
     - cloudflare-nginx
     Cf-Ray:
-    - 3c697b38951692dc-SJC
+    - 3c87aab8e7b593d8-SJC
   body:
-    encoding: ASCII-8BIT
+    encoding: UTF-8
   http_version: 
-recorded_at: Fri, 01 Dec 2017 22:28:46 GMT
+recorded_at: Tue, 05 Dec 2017 14:24:03 GMT
