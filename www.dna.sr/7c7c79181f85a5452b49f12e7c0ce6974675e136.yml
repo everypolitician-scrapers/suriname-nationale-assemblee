@@ -18,22 +18,22 @@ response:
     message: Moved Permanently
   headers:
     Date:
-    - Sun, 07 Jan 2018 12:48:42 GMT
+    - Mon, 08 Jan 2018 09:22:07 GMT
     Connection:
     - keep-alive
     Cache-Control:
     - max-age=3600
     Expires:
-    - Sun, 07 Jan 2018 13:48:42 GMT
+    - Mon, 08 Jan 2018 10:22:07 GMT
     Location:
     - http://dna.sr/het-politiek-college/leden/
     Server:
     - cloudflare-nginx
     Cf-Ray:
-    - 3d970867a6cc516a-SJC
+    - 3d9e172c05796e08-SJC
     Content-Length:
     - '0'
   body:
     encoding: UTF-8
   http_version: 
-recorded_at: Sun, 07 Jan 2018 12:48:42 GMT
+recorded_at: Mon, 08 Jan 2018 09:22:07 GMT
