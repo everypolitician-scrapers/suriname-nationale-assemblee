@@ -14,8 +14,12 @@ class MemberName < Scraped::HTML
     partitioned.first.join(' ')
   end
 
-  field :name do
+  field :suffix do
     partitioned.last.join(' ')
+  end
+
+  field :name do
+    partitioned[1].join(' ')
   end
 
   field :gender do
@@ -29,9 +33,12 @@ class MemberName < Scraped::HTML
   MALE_PREFIXES    = %w(hr).freeze
   OTHER_PREFIXES   = %w(dr drs ir mr).freeze
   PREFIXES         = FEMALE_PREFIXES + MALE_PREFIXES + OTHER_PREFIXES
+  SUFFIXES         = %w(bsc bth bba msc mpa llb).freeze
 
   def partitioned
-    words.partition { |w| PREFIXES.include? w.chomp('.').downcase }
+    pre, rest = words.partition { |w| PREFIXES.include? w.chomp('.').downcase }
+    suf, name = rest.partition { |w| SUFFIXES.include? w.chomp('.').downcase }
+    [pre, name, suf]
   end
 
   def prefixes
@@ -70,6 +77,10 @@ class MemberItem < Scraped::HTML
 
   field :honorific_prefix do
     name_parts.prefix
+  end
+
+  field :honorific_suffix do
+    name_parts.suffix
   end
 
   field :gender do
